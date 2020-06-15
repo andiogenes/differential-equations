@@ -1,13 +1,15 @@
 import scala.collection.mutable.ListBuffer
 
-/**
- * Правая часть дифференциального уравнения:
- *
- * f = f(x,u)
- */
-type RightSide = (Double, Vector[Double]) => Double
+object RungeKuttaMethod {
+  /**
+   * Правая часть дифференциального уравнения:
+   *
+   * f = f(x,u)
+   */
+  type RightSide = (Double, Vector[Double]) => Double
+}
 
-class RungeKuttaMethod(fun: List[RightSide], x0: Double, u0: Vector[Double]) {
+class RungeKuttaMethod(fun: List[RungeKuttaMethod.RightSide], x0: Double, u0: Vector[Double]) {
   /**
    * Вычисляет таблицу значений решения системы дифференциальных уравнений
    * методом Рунге-Кутты 4 порядка точности на сетке [x0, xn]/) с шагом h.
