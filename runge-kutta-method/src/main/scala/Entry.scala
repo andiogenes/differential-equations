@@ -80,9 +80,10 @@ object Entry extends App {
   val p = figure.subplot(0)
   p.xlabel = "x axis"
   p.ylabel = "y axis"
+  p.legend = true
 
-  rkInterpolations.foreach { v =>
-    p += plot(x, x.map(v(_)))
+  rkInterpolations.zipWithIndex.foreach { case (v, i) =>
+    p += plot(x, x.map(v(_)), name=s"u${i+1}(x)")
   }
 
   figure.saveas(destination)
