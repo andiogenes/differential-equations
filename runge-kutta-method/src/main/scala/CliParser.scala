@@ -9,7 +9,7 @@ Usage: app [--source filename] [--dest filename]
 
   val defaultOptions = Map(
     Source -> "assignment.yml",
-    Destination -> "result.yml"
+    Destination -> "result.png"
   )
 
   type OptionMap = Map[Symbol, Any]

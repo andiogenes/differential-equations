@@ -65,7 +65,7 @@ object Entry extends App {
 
   val rk = new RungeKuttaMethod(f, config.x0, u0).RK4(config.step, config.b)
 
-  val u = {
+  val rkInterpolations = {
     val x = new DenseVector(rk.map(_._1).toArray)
 
     u0.indices.map {
@@ -74,15 +74,18 @@ object Entry extends App {
   }
 
   val figure = Figure()
-  val p = figure.subplot(0)
   val x = linspace(config.a, config.b)
 
-  u.foreach {
-    v =>
-      p += plot(x, x.map(v(_)))
+  // График решения с постоянным шагом
+  val p = figure.subplot(0)
+  p.xlabel = "x axis"
+  p.ylabel = "y axis"
+
+  rkInterpolations.foreach { v =>
+    p += plot(x, x.map(v(_)))
   }
 
-  figure.saveas("out.png")
+  figure.saveas(destination)
 }
 
 class Config {
