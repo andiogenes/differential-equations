@@ -1,11 +1,9 @@
-import java.awt.Color
 import java.beans.BeanProperty
 import java.io.{File, FileInputStream}
 import java.util
 
 import breeze.interpolation.CubicInterpolator
-import breeze.linalg.DenseVector
-import breeze.linalg.linspace
+import breeze.linalg.{DenseVector, linspace}
 import breeze.plot.{Figure, Plot, plot, scatter}
 import javax.script._
 import org.yaml.snakeyaml.Yaml
@@ -79,14 +77,31 @@ object Entry extends App {
     }
 
     points.foreach { yValues =>
-      p += scatter(xValues, yValues, _ => (config.b - config.a)/100, name = "")
+      p += scatter(xValues, yValues, _ => (config.b - config.a) / 100)
+    }
+  }
+
+  /**
+   * Рисует графики точных решений
+   *
+   * @param p         График, на который происходит отображение
+   * @param functions Функции вида u = f(x)
+   */
+  def drawExact(p: Plot, functions: List[RungeKuttaMethod.RightSide]): Unit = {
+    functions.zipWithIndex.foreach { case (fn, i) =>
+      p += plot(x, x.map(fn(_, Vector())), name = s"точная u${i + 1}(x)")
     }
   }
 
   val config = loadData(source)
 
   val u0 = config.u0.asScala.toVector.map(_.toDouble)
+
   val f = wrapFunctions(config.f)
+  val exact = config.exact match {
+    case null => List()
+    case fn => wrapFunctions(fn)
+  }
 
   val (rk, rkf) = {
     val method = new RungeKuttaMethod(f, config.x0, u0)
@@ -105,6 +120,7 @@ object Entry extends App {
   p.legend = true
 
   draw(p, rk)
+  drawExact(p, exact)
 
   val p2 = figure.subplot(2, 1, 1)
   p2.title = "Автоматический выбор шага (вложенный метод)"
@@ -113,6 +129,19 @@ object Entry extends App {
   p2.legend = true
 
   draw(p2, rkf)
+  drawExact(p2, exact)
+
+  if (config.exact != null) {
+    val norm: List[(Double, Vector[Double])] => Double = v => v.map {
+      case (x, u) => exact.map(fn => fn(x, Vector())).zip(u).map(v => Math.abs(v._1 - v._2)).max
+    }.max
+
+    val rkNorm = norm(rk)
+    val rkfNorm = norm(rkf)
+
+    p.title += s"\nНорма глобальной погрешности: $rkNorm"
+    p2.title += s"\nНорма глобальной погрешности: $rkfNorm"
+  }
 
   figure.saveas(destination)
 }
