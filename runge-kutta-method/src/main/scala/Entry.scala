@@ -83,7 +83,7 @@ object Entry extends App {
   p.legend = true
 
   rkInterpolations.zipWithIndex.foreach { case (v, i) =>
-    p += plot(x, x.map(v(_)), name=s"u${i+1}(x)")
+    p += plot(x, x.map(v(_)), name = s"u${i + 1}(x)")
   }
 
   figure.saveas(destination)
@@ -97,4 +97,5 @@ class Config {
   @BeanProperty var b: Double = 0d
   @BeanProperty var step: Double = 1d
   @BeanProperty var eps: Double = 1d
+  @BeanProperty var exact: util.ArrayList[String] = _
 }
