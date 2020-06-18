@@ -32,6 +32,10 @@ class RungeKuttaMethod(fun: List[RungeKuttaMethod.RightSide], x0: Double, u0: Ve
   }
 
   def RKF24(h0: Double, xn: Double, eps: Double): List[(Double, Vector[Double])] = {
+    val fac = 0.8
+    val facMin = 0.4
+    var facMax = 4d
+
     val table: ListBuffer[(Double, Vector[Double])] = ListBuffer((x0, u0))
 
     var x = x0
@@ -47,13 +51,16 @@ class RungeKuttaMethod(fun: List[RungeKuttaMethod.RightSide], x0: Double, u0: Ve
       val (e, y, _) = egorov(h, x, u)
 
       val err = Math.sqrt(e.map(v => v * v).sum)
-      h = Math.pow(eps / err, 0.2) * h
+      h = (facMax min (facMin max (fac * Math.pow(eps / err, 0.2)))) * h
 
       if (err <= eps) {
         x = xNext
         u = y
+        facMax = 4d
 
         table.append((x, u))
+      } else {
+        facMax = 1d
       }
     }
 
