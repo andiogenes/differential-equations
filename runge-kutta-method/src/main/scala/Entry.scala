@@ -1,10 +1,11 @@
 import java.beans.BeanProperty
-import java.io.{File, FileInputStream}
+import java.io.{File, FileInputStream, PrintWriter}
 import java.util
 
 import breeze.interpolation.CubicInterpolator
 import breeze.linalg.{DenseVector, linspace}
 import breeze.plot.{Figure, Plot, plot, scatter}
+import com.jakewharton.fliptables.FlipTable
 import javax.script._
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
@@ -145,7 +146,28 @@ object Entry extends App {
 
   figure.width = 1024
   figure.height = 1280
-  figure.saveas(destination)
+  figure.saveas(s"$destination.png")
+
+  val ff = u0.indices.map(v => s"u$v(x)").toArray
+  val headers = Array("i", "xi") ++ ff
+
+  val dataToTable: List[(Double, Vector[Double])] => Array[Array[String]] = v => v.zipWithIndex.map {
+    case ((x, u), i) =>
+      val ff = u.map(_.toString).toArray
+      Array(s"$i", x.toString) ++ ff
+  }.toArray
+
+  val rkData = dataToTable(rk)
+  val rkfData = dataToTable(rkf)
+
+  val rkWriter = new PrintWriter(new File(s"${destination}_rk.dat"))
+  val rkfWriter = new PrintWriter(new File(s"${destination}_rkf.dat"))
+
+  rkWriter.write(FlipTable.of(Array("Постоянный шаг"), Array(Array(FlipTable.of(headers, rkData)))))
+  rkfWriter.write(FlipTable.of(Array("Автоматический выбор шага"), Array(Array(FlipTable.of(headers, rkfData)))))
+
+  rkWriter.close()
+  rkfWriter.close()
 }
 
 class Config {
