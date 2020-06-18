@@ -76,8 +76,8 @@ object Entry extends App {
       p += plot(x, x.map(v(_)), name = s"u${i + 1}(x)")
     }
 
-    points.foreach { yValues =>
-      p += scatter(xValues, yValues, _ => (config.b - config.a) / 100)
+    points.zipWithIndex.foreach { case (yValues, i) =>
+      p += scatter(xValues, yValues, _ => (config.b - config.a) / 200, name = s"опорные точки u${i + 1}(x)")
     }
   }
 
@@ -114,7 +114,7 @@ object Entry extends App {
 
   // График решения с постоянным шагом
   val p = figure.subplot(0)
-  p.title = "Постоянный шаг"
+  p.title = s"Постоянный шаг, h = ${config.step}"
   p.xlabel = "x axis"
   p.ylabel = "y axis"
   p.legend = true
@@ -123,7 +123,7 @@ object Entry extends App {
   drawExact(p, exact)
 
   val p2 = figure.subplot(2, 1, 1)
-  p2.title = "Автоматический выбор шага (вложенный метод)"
+  p2.title = s"Автоматический выбор шага (вложенный метод), eps = ${config.eps}, шагов: ${rkf.length}"
   p2.xlabel = "x axis"
   p2.ylabel = "y axis"
   p2.legend = true
@@ -143,6 +143,8 @@ object Entry extends App {
     p2.title += s"\nНорма глобальной погрешности: $rkfNorm"
   }
 
+  figure.width = 1024
+  figure.height = 1280
   figure.saveas(destination)
 }
 

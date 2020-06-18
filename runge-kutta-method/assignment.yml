@@ -1,14 +1,15 @@
 x0: 0
 u0:
-  - 0.8
-  - 2
+  - 1
 
 f:
-  - u[1]
-  - Math.cos(3*x) - 4*u[0]
+  - -30*u[0]
 
 a: 0
 b: 1
 
 step: 0.1
 eps: 0.1
+
+exact:
+  - Math.exp(-30*x)
