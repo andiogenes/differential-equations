@@ -31,12 +31,12 @@ class RungeKuttaMethod(fun: List[RungeKuttaMethod.RightSide], x0: Double, u0: Ve
     table.toList
   }
 
-  def RKF24(h: Double, xn: Double, eps: Double): List[(Double, Vector[Double])] = {
+  def RKF24(h0: Double, xn: Double, eps: Double): List[(Double, Vector[Double])] = {
     val table: ListBuffer[(Double, Vector[Double])] = ListBuffer((x0, u0))
 
     var x = x0
     var u = u0
-    var h = h
+    var h = h0
 
     while (x < xn) {
       val xNext = x + h

@@ -1,3 +1,4 @@
+import java.awt.Color
 import java.beans.BeanProperty
 import java.io.{File, FileInputStream}
 import java.util
@@ -5,9 +6,7 @@ import java.util
 import breeze.interpolation.CubicInterpolator
 import breeze.linalg.DenseVector
 import breeze.linalg.linspace
-import breeze.plot.Figure
-import breeze.plot.plot
-
+import breeze.plot.{Figure, Plot, plot, scatter}
 import javax.script._
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
@@ -58,19 +57,41 @@ object Entry extends App {
     }.toList
   }
 
+  /**
+   * Рисует графики решения
+   *
+   * @param p      График, на который происходит отображение
+   * @param values Значения функций в опорных точках
+   */
+  def draw(p: Plot, values: List[(Double, Vector[Double])]): Unit = {
+    val xValues = new DenseVector(values.map(_._1).toArray)
+
+    val interpolations = u0.indices.map {
+      i => CubicInterpolator(xValues, new DenseVector(values.map(_._2(i)).toArray))
+    }
+
+    val points = u0.indices.map {
+      i => new DenseVector(values.map(_._2(i)).toArray)
+    }
+
+    interpolations.zipWithIndex.foreach { case (v, i) =>
+      p += plot(x, x.map(v(_)), name = s"u${i + 1}(x)")
+    }
+
+    points.foreach { yValues =>
+      p += scatter(xValues, yValues, _ => (config.b - config.a)/100, name = "")
+    }
+  }
+
   val config = loadData(source)
 
   val u0 = config.u0.asScala.toVector.map(_.toDouble)
   val f = wrapFunctions(config.f)
 
-  val rk = new RungeKuttaMethod(f, config.x0, u0).RK4(config.step, config.b)
+  val (rk, rkf) = {
+    val method = new RungeKuttaMethod(f, config.x0, u0)
 
-  val rkInterpolations = {
-    val x = new DenseVector(rk.map(_._1).toArray)
-
-    u0.indices.map {
-      i => CubicInterpolator(x, new DenseVector(rk.map(_._2(i)).toArray))
-    }
+    (method.RK4(config.step, config.b), method.RKF24(config.step, config.b, config.eps))
   }
 
   val figure = Figure()
@@ -78,13 +99,20 @@ object Entry extends App {
 
   // График решения с постоянным шагом
   val p = figure.subplot(0)
+  p.title = "Постоянный шаг"
   p.xlabel = "x axis"
   p.ylabel = "y axis"
   p.legend = true
 
-  rkInterpolations.zipWithIndex.foreach { case (v, i) =>
-    p += plot(x, x.map(v(_)), name = s"u${i + 1}(x)")
-  }
+  draw(p, rk)
+
+  val p2 = figure.subplot(2, 1, 1)
+  p2.title = "Автоматический выбор шага (вложенный метод)"
+  p2.xlabel = "x axis"
+  p2.ylabel = "y axis"
+  p2.legend = true
+
+  draw(p2, rkf)
 
   figure.saveas(destination)
 }
