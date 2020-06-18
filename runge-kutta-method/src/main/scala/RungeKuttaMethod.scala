@@ -39,6 +39,10 @@ class RungeKuttaMethod(fun: List[RungeKuttaMethod.RightSide], x0: Double, u0: Ve
     var h = h0
 
     while (x < xn) {
+      if (x + h > xn) {
+        h = xn - x
+      }
+
       val xNext = x + h
       val (e, y, _) = egorov(h, x, u)
 
