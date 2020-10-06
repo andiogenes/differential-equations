@@ -100,7 +100,6 @@ class RungeKuttaMethod(fun: List[RungeKuttaMethod.RightSide], x0: Double, u0: Ve
         u + (k1 + 2 * k2 + 2 * k3 + k4) / 6
     }
 
-    // TODO: убрать ~y, не используется в вычислениях (?)
     val yTilde = u.zip(k1).zip(k2).zip(k3).zip(k4).map {
       case ((((u, k1), k2), k3), k4) =>
         u + (-k1 + 2 * k2 + 2 * k3 - k4) / 2
