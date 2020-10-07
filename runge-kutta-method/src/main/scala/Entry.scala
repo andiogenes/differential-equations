@@ -149,12 +149,12 @@ object Entry extends App {
   figure.saveas(s"$destination.png")
 
   val ff = u0.indices.map(v => s"u$v(x)").toArray
-  val headers = Array("i", "xi") ++ ff
+  val headers = Array("i", "xi") ++ ff ++ ff.map(_ ++ " (exact)")
 
   val dataToTable: List[(Double, Vector[Double])] => Array[Array[String]] = v => v.zipWithIndex.map {
     case ((x, u), i) =>
       val ff = u.map(_.toString).toArray
-      Array(s"$i", x.toString) ++ ff
+      Array(s"$i", x.toString) ++ ff ++ exact.map(_(x, Vector()).toString)
   }.toArray
 
   val rkData = dataToTable(rk)
