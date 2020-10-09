@@ -1,6 +1,6 @@
 module Main where
 
-import Lib
+import RungeKutta
 
 main :: IO ()
-main = someFunc
+main = putStr "hello world"

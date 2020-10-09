@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8ee62131be6e0dc3e2ab22dc50ca5acfa934e35f136132ff248dc6e0c2906770
+-- hash: 930c36ddecf18f9528a57c0195467da063ea6b908da0f0353f29adbb33ef5551
 
 name:           shooting-method
 version:        0.1.0.0
@@ -15,7 +15,6 @@ author:         Author name here
 maintainer:     example@example.com
 copyright:      2020 Author name here
 license:        BSD3
-license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
@@ -27,7 +26,7 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      RungeKutta
   other-modules:
       Paths_shooting_method
   hs-source-dirs:
