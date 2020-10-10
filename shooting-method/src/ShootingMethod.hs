@@ -44,9 +44,11 @@ f = Pair u' y'
 cond :: Num a => a -> Pair a
 cond s = Pair 1 s
 
+-- | Находит решение системы с заданным 's'.
 phi :: Double -> Double -> [(Double, Pair Double)]
 phi s h0 = rk4r f (cond s) x0 xn h0
 
+-- | Находит подходящий параметр 's' методом деления отрезка ['s','e'] пополам.
 solve :: Double -> Double -> Double -> Double -> Pair Double -> (Double, Pair Double)
 solve s e h0 eps (Pair solution prev) =
     if (abs prev) < eps then (e, Pair solution prev)

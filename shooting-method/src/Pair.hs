@@ -4,6 +4,7 @@ module Pair
     , second
     ) where
 
+-- | Пара двух гомогенных элементов численного типа 'а'.
 data Pair a = Pair a a deriving (Eq, Show)
 
 instance Num a => Num (Pair a) where
@@ -25,8 +26,10 @@ instance Applicative Pair where
     pure x = Pair x x
     (Pair f g) <*> (Pair x y) = Pair (f x) (g y)
 
+-- | Возвращает первый элемент пары.
 first :: Pair a -> a
 first (Pair l _) = l
 
+-- | Возвращает второй элемент пары.
 second :: Pair a -> a
 second (Pair _ r) = r

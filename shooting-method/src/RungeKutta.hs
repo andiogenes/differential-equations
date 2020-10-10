@@ -7,13 +7,21 @@ module RungeKutta
 
 import Pair (Pair(..))
 
+-- | Решает систему с правыми частями 'f', начальными условиями 'u0' на отрезке ['x0','xn']
+-- методом Рунге-Кутты 4 порядка точности с постоянным шагом 'h'.
+--
+-- Возвращает список кортежей @(x, Pair u u')@.
 rk4 :: (Fractional a, Ord a, Enum a) => Pair (a -> Pair a -> a) -> Pair a -> a -> a -> a -> [(a, Pair a)]
 rk4 f u0 x0 xn h = reverse $ rk4r f u0 x0 xn h
 
+-- | Решает систему с правыми частями 'f', начальными условиями 'u0' на отрезке ['x0','xn']
+-- методом Рунге-Кутты 4 порядка точности с автоматическим выбором шага с точностью 'eps'.
+--
+-- Возвращает список кортежей @(x, Pair u u')@.
 rkf24 :: (Floating p, Ord p) => Pair (p -> Pair p -> p) -> Pair p -> p -> p -> p -> p -> [(p, Pair p)]
 rkf24 f u0 x0 xn h0 eps = reverse $ rkf24r f u0 x0 xn h0 eps
 
-
+-- | Как 'rk4', но таблица значений возвращается по убыванию 'x'.
 rk4r :: (Fractional a, Ord a, Enum a) => Pair (a -> Pair a -> a) -> Pair a -> a -> a -> a -> [(a, Pair a)]
 rk4r f u0 x0 xn h =
     let grid = takeWhile (\x -> x <= xn) [ if x < xn then x else x - offset | i <- [0..], let x = x0+h*i ] 
@@ -26,6 +34,7 @@ rk4r f u0 x0 xn h =
 
     in fill u0 grid []
 
+-- | Как 'rkf24', но таблица значений возвращается по убыванию 'x'.
 rkf24r :: (Floating p, Ord p) => Pair (p -> Pair p -> p) -> Pair p -> p -> p -> p -> p -> [(p, Pair p)]
 rkf24r f u0 x0 xn h0 eps =
     let fac = 0.8
@@ -51,7 +60,7 @@ rkf24r f u0 x0 xn h0 eps =
 
     in fill x0 u0 h0 [(x0, u0)] facMax
 
-
+-- | Вычисляет 'k1', 'k2', 'k3', 'k4' для столбца функций 'f', текущей точки 'x' и значениях 'u' в предыдущей точке.
 nomials :: Fractional t => Pair (t -> Pair t -> t) -> t -> t -> Pair t -> (Pair t, Pair t, Pair t, Pair t)
 nomials f h x u = (k1, k2, k3, k4)
     where h' x' = h*x'
@@ -60,13 +69,13 @@ nomials f h x u = (k1, k2, k3, k4)
           k3 = h' <$> (\f -> f (x + h/2) (u + k2/2)) <$> f
           k4 = h' <$> (\f -> f (x + h) (u + k3)) <$> f
 
-
+-- | Вычисляет значение в точке @u+1@ по формуле для метода Рунге-Кутты 4 порядка точности.
 rk :: Fractional a => Pair (a -> Pair a -> a) -> a -> a -> Pair a -> Pair a
 rk f h x u =
     let (k1, k2, k3, k4) = nomials f h x u
     in u + (k1 + 2*k2 + 2*k3 + k4) / 6
 
-
+-- | Вычисляет контрольный член Егорова.
 egorov :: Fractional b => Pair (b -> Pair b -> b) -> b -> b -> Pair b -> (Pair b, Pair b)
 egorov f h x u =
     let (k1, k2, k3, k4) = nomials f h x u
