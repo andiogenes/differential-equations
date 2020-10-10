@@ -46,7 +46,8 @@ rkf24 f u0 x0 xn h0 eps = reverse $ rkf24r f u0 x0 xn h0 eps
 
 rk4r :: (Fractional a, Ord a, Enum a) => Pair (a -> Pair a -> a) -> Pair a -> a -> a -> a -> [(a, Pair a)]
 rk4r f u0 x0 xn h =
-    let grid = takeWhile (\x -> x <= xn) [ x | i <- [0..], let x = x0+h*i ]
+    let grid = takeWhile (\x -> x <= xn) [ if x < xn then x else x - offset | i <- [0..], let x = x0+h*i ] 
+            where offset = 0.00001
     
         fill _ [] acc = acc
         fill u (x:xs) acc = 
