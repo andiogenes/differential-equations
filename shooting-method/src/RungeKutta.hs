@@ -4,6 +4,8 @@ module RungeKutta
     , rk4r
     , rkf24r
     , Pair (..)
+    , first
+    , second
     ) where
 
 
@@ -27,6 +29,12 @@ instance Functor Pair where
 instance Applicative Pair where
     pure x = Pair x x
     (Pair f g) <*> (Pair x y) = Pair (f x) (g y)
+
+first :: Pair a -> a
+first (Pair l _) = l
+
+second :: Pair a -> a
+second (Pair _ r) = r
 
 
 rk4 :: (Fractional a, Ord a, Enum a) => Pair (a -> Pair a -> a) -> Pair a -> a -> a -> a -> [(a, Pair a)]

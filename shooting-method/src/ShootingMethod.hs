@@ -11,7 +11,7 @@ module ShootingMethod
     , solve
     ) where
 
-import RungeKutta (Pair (..), rkf24r)
+import RungeKutta (Pair (..), rk4r, first)
 
 rho :: Double
 rho = 0.5
@@ -43,15 +43,19 @@ f = Pair u' y'
 cond :: Num a => a -> Pair a
 cond s = Pair 1 s
 
-phi :: Double -> Double -> Double -> [(Double, Pair Double)]
-phi s h0 eps = rkf24r f (cond s) x0 xn h0 eps
+phi :: Double -> Double -> [(Double, Pair Double)]
+phi s h0 = rk4r f (cond s) x0 xn h0
 
-solve :: Double -> Double -> Double -> Double -> Double -> Pair Double -> Pair Double
-solve s e h0 eps eps' (Pair prev solution) =
-    if (abs prev) < eps then Pair prev solution
+solve :: Double -> Double -> Double -> Double -> Pair Double -> (Double, Pair Double)
+solve s e h0 eps (Pair prev solution) =
+    if (abs prev) < eps then (e, Pair prev solution)
     else
-        let (xs, ps) = (head x, head u) where (x, u) = unzip $ phi s h0 eps'
-            (xe, pe) = (head x, head u) where (x, u) = unzip $ phi e h0 eps'
-            (xc, pc) = (head x, head u) where (x, u) = unzip $ phi c h0 eps' where c = (s + e) / 2
-            (sNext, eNext, prevNext) = if signum ps /= signum pc then (xs, xc, pc) else (xc, xe, pe)
-        in solve sNext eNext h0 eps eps' prevNext
+        let c = (s + e) / 2
+            (_, ps) = head $ phi s h0
+            (_, pe) = head $ phi e h0
+            (_, pc) = head $ phi c h0
+            (sNext, eNext, prevNext) = 
+              if signum (first ps) /= signum (first pc) 
+                then (s, c, pc) 
+                else (c, e, pe)
+        in solve sNext eNext h0 eps prevNext
