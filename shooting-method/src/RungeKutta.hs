@@ -1,7 +1,9 @@
 module RungeKutta
     ( rk4
     , rkf24
-    , Pair
+    , rk4r
+    , rkf24r
+    , Pair (..)
     ) where
 
 
@@ -28,26 +30,32 @@ instance Applicative Pair where
 
 
 rk4 :: (Fractional a, Ord a, Enum a) => Pair (a -> Pair a -> a) -> Pair a -> a -> a -> a -> [(a, Pair a)]
-rk4 f u0 x0 xn h =
+rk4 f u0 x0 xn h = reverse $ rk4r f u0 x0 xn h
+
+rkf24 :: (Floating p, Ord p) => Pair (p -> Pair p -> p) -> Pair p -> p -> p -> p -> p -> [(p, Pair p)]
+rkf24 f u0 x0 xn h0 eps = reverse $ rkf24r f u0 x0 xn h0 eps
+
+
+rk4r :: (Fractional a, Ord a, Enum a) => Pair (a -> Pair a -> a) -> Pair a -> a -> a -> a -> [(a, Pair a)]
+rk4r f u0 x0 xn h =
     let grid = takeWhile (\x -> x <= xn) [ x | i <- [0..], let x = x0+h*i ]
     
-        fill _ [] acc = reverse acc
+        fill _ [] acc = acc
         fill u (x:xs) acc = 
             let u' = rk f h x u
             in fill u' xs $ (x,u):acc
 
     in fill u0 grid []
 
-
-rkf24 :: (Floating p, Ord p) => Pair (p -> Pair p -> p) -> Pair p -> p -> p -> p -> p -> [(p, Pair p)]
-rkf24 f u0 x0 xn h0 eps =
+rkf24r :: (Floating p, Ord p) => Pair (p -> Pair p -> p) -> Pair p -> p -> p -> p -> p -> [(p, Pair p)]
+rkf24r f u0 x0 xn h0 eps =
     let fac = 0.8
         facMin = 0.4
         facMax = 4.0
         facMaxBad = 1.0
 
         fill x u h table stepFacMax = 
-            if x >= xn then reverse table
+            if x >= xn then table
             else 
                 let h' = if x + h > xn then xn - x else h
                     (y, Pair e e') = egorov f h' x u
