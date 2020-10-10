@@ -11,7 +11,8 @@ module ShootingMethod
     , solve
     ) where
 
-import RungeKutta (Pair (..), rk4r, first)
+import RungeKutta (rk4r)
+import Pair (Pair (..), first)
 
 rho :: Double
 rho = 0.5

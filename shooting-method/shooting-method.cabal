@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 588f8c2821271fd4d909a8286feabebe0edb14c5eee00cd18acbd74e790dce0a
+-- hash: ae86d6a365a2ed15fff3c2647e0c2ff785e3090bcd051e6ba601275fc3e5fe99
 
 name:           shooting-method
 version:        0.1.0.0
@@ -26,6 +26,7 @@ source-repository head
 
 library
   exposed-modules:
+      Pair
       RungeKutta
       ShootingMethod
   other-modules:
