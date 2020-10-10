@@ -12,7 +12,7 @@ module ShootingMethod
     ) where
 
 import RungeKutta (rk4r)
-import Pair (Pair (..), first)
+import Pair (Pair (..), second)
 
 rho :: Double
 rho = 0.5
@@ -48,15 +48,15 @@ phi :: Double -> Double -> [(Double, Pair Double)]
 phi s h0 = rk4r f (cond s) x0 xn h0
 
 solve :: Double -> Double -> Double -> Double -> Pair Double -> (Double, Pair Double)
-solve s e h0 eps (Pair prev solution) =
-    if (abs prev) < eps then (e, Pair prev solution)
+solve s e h0 eps (Pair solution prev) =
+    if (abs prev) < eps then (e, Pair solution prev)
     else
         let c = (s + e) / 2
             (_, ps) = head $ phi s h0
             (_, pe) = head $ phi e h0
             (_, pc) = head $ phi c h0
             (sNext, eNext, prevNext) = 
-              if signum (first ps) /= signum (first pc) 
+              if signum (second ps) /= signum (second pc) 
                 then (s, c, pc) 
                 else (c, e, pe)
         in solve sNext eNext h0 eps prevNext

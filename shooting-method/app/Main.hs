@@ -8,8 +8,8 @@ import Graphics.Rendering.Chart.Backend.Diagrams
 
 solution = solve from to step eps (Pair 10 10)
     where
-        from    = -3
-        to      = -0.5
+        from    = -5
+        to      = 0
         step    = 0.001
         eps     = 0.0000001 
 
