@@ -1,0 +1,84 @@
+
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[a4paper, total={6in, 8in}, left=30mm]{geometry}
+\usepackage{pdfpages}
+
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{fancyhdr}
+\usepackage{minted}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+\hypersetup{
+  pdfborderstyle={/S/U/W 1}
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Антон Завьялов, ПИ-72}
+\rhead{\textbf{Лабораторная №15, вариант 7}}
+\cfoot{\thepage}
+
+\makeatletter
+\def\@seccntformat#1{
+  \expandafter\ifx\csname c@#1\endcsname\c@section\else
+  \csname the#1\endcsname\quad
+  \fi}
+\makeatother
+
+\begin{document}
+\includepdf[pages={1}]{title.pdf}
+
+\section{\normalsize{Задание к лабораторной работе}}
+\begin{flushleft}
+  \textit{Постановка задачи}\linebreak
+  Требуется найти приближенное значение решения следующей краевой задачи:
+
+  \begin{equation}\label{eq:pos_1}
+    \frac{d^2u(x)}{dx^2} + A(x)\frac{du(x)}{dx} + B(x)u(x) = C(x),~x \in [a,b],
+  \end{equation}
+
+  \begin{equation}\label{eq:pos_2}
+    F_1u(a) + D_1\frac{du(a)}{dx} = E_1,
+  \end{equation}
+
+  \begin{equation}\label{eq:pos_2}
+    F_2u(b) + D_2\frac{du(b)}{dx} = E_2.
+  \end{equation}
+
+  \textit{Задание к лабораторной работе}\linebreak
+  \begin{itemize}
+    \item По аналогии с описанным в параграфе 7.2 методом, вывести формулы для коэффициентов системы линейных алгебраических уравнений с трехдиагональной матрицей, которая получается для метода первого порядка аппроксимации.
+    \item Составить программу для решения краевой задачи для линейного дифференциального уравнения второго порядка методом прогонки в случае первого и второго порядка аппроксимации.
+    \item Провести вычисления, разбивая отрезок интегрирования на различное число частей, например, 25, 50, 100, 200.
+    \item Проанализировать зависимость нормы разности между точным и приближенным решением от шага сетки для методов первого и второго порядка аппроксимации. Для этого составить таблицу или построить графики нормы разности для методов различного порядка аппроксимации. В качестве нормы можно взять C-норму. В этом случае норма функции равна максимальному значению модуля этой функции.
+    \item Исследовать для Вашего варианта вопрос об устойчивости прогонки.
+  \end{itemize}
+
+  \textit{Для 7 варианта:}\linebreak
+  \begin{equation}\label{eq:params}
+    A(x) = \frac{4x}{2x+1}, (B(x) = \frac{-4}{2x+1}, C(x) = 0,
+  \end{equation}
+  \begin{equation*}
+    a = 0, b = 1,~F_1 = 1, D_1 = 1, E_1 = 0,~F_2 = 2, D_2 = 1, E_2 = 3,
+  \end{equation*}
+  \begin{equation*}
+    u(x) = x + e^{-2x}.
+  \end{equation*}
+\end{flushleft}
+
+\section{\normalsize{Краткое описание метода, расчётные формулы}}
+\begin{flushleft}
+\end{flushleft}
+
+
+\section{\normalsize{Текст программы с комментариями}}
+Кроме расположенных ниже листингов, исходный код можно посмотреть по адресу: \url{https://github.com/andiogenes/differential-equations/tree/master/finite-difference-method}
+
+\section{\normalsize{Тестовые примеры}}
+
+\end{document}
