@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bbee31b2ca3eebbf681ca7f7bad45e18fc4181c0591126c68861c6fee6194775
+-- hash: 9305e2f982cdaa36466b6bbdf1dfa3cc12dff69a4ca94064c3ffe5b4ae1e5e16
 
 name:           finite-difference-method
 version:        0.1.0.0
@@ -27,13 +27,16 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      FiniteDifferenceMethod
+      Parameters
   other-modules:
       Paths_finite_difference_method
   hs-source-dirs:
       src
   build-depends:
-      base >=4.7 && <5
+      Chart
+    , Chart-diagrams
+    , base >=4.7 && <5
   default-language: Haskell2010
 
 executable finite-difference-method-exe
@@ -44,7 +47,9 @@ executable finite-difference-method-exe
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      Chart
+    , Chart-diagrams
+    , base >=4.7 && <5
     , finite-difference-method
   default-language: Haskell2010
 
@@ -57,6 +62,8 @@ test-suite finite-difference-method-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      Chart
+    , Chart-diagrams
+    , base >=4.7 && <5
     , finite-difference-method
   default-language: Haskell2010

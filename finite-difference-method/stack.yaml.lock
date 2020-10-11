@@ -3,7 +3,21 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: Chart-1.9.3@sha256:b2bf7f6fc3236164905b008a4c909448b4afe813264ca3a925b238cfe1ee42c7,2949
+    pantry-tree:
+      size: 3031
+      sha256: e83ef0b071ccf18e1b8ba8a23569ceb767bcaac63849ed44f023d69db9f3ace7
+  original:
+    hackage: Chart-1.9.3
+- completed:
+    hackage: Chart-diagrams-1.9.3@sha256:dcaa8899fa5e2de7cd7013fdd84cc320a6ed63dc9d1bbf6559cd0233c7f9a4c2,1802
+    pantry-tree:
+      size: 934
+      sha256: aa074ef59fa95980c0e861448d0f64e6a47aa427299d72d18bf055211be07b31
+  original:
+    hackage: Chart-diagrams-1.9.3
 snapshots:
 - completed:
     size: 532386
