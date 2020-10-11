@@ -5,7 +5,7 @@ import Graphics.Rendering.Chart.Backend.Diagrams
 import Graphics.Rendering.Chart.Easy
 import Parameters
 
-steps = 100
+steps = 500
 
 main :: IO ()
 main = toFile def "solition.svg" $ do
@@ -21,7 +21,7 @@ main = toFile def "solition.svg" $ do
     u3 = zip values [u x | x <- values]
 
 norm :: IO ()
-norm = toFile def "solition.svg" $ do
+norm = toFile def "norm.svg" $ do
   layout_title .= "Norm"
   setColors [opaque blue, opaque green, opaque red, opaque orange]
   plot (line "u (1st order)" [zip values u1])

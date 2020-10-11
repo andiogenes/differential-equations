@@ -12,10 +12,13 @@
 \usepackage{minted}
 \usepackage{hyperref}
 \usepackage{amsmath}
+\usepackage{graphicx}
 
 \hypersetup{
   pdfborderstyle={/S/U/W 1}
 }
+
+\graphicspath{{./images/}}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -61,7 +64,7 @@
 
   \textit{Для 7 варианта:}\linebreak
   \begin{equation}\label{eq:params}
-    A(x) = \frac{4x}{2x+1}, (B(x) = \frac{-4}{2x+1}, C(x) = 0,
+    A(x) = \frac{4x}{2x+1}, B(x) = \frac{-4}{2x+1}, C(x) = 0,
   \end{equation}
   \begin{equation*}
     a = 0, b = 1,~F_1 = 1, D_1 = 1, E_1 = 0,~F_2 = 2, D_2 = 1, E_2 = 3,
@@ -73,12 +76,78 @@
 
 \section{\normalsize{Краткое описание метода, расчётные формулы}}
 \begin{flushleft}
+  В методе $u', u'', ...$ выражаются численно через конечные разности на заданной равномерной сетке из $n$ частей $\{a,a+h, ..., b-h, b\}$, $h=\frac{b-a}{n}$.
+  \linebreak\linebreak
+  $u(x_i)$ обозначается как $y_i$, приводятся подобные и решается система $n$ линейных алгебраических уравнений.
+  Т.к. в каждую конечную разность входят $y_{i-1, y_i, y_{i+1}}$, заданы значения $u$ на концах, можно решить систему методом прогонки.
+  \linebreak\linebreak
+  \textit{Система с трехдиагональной матрицей:}
+  \begin{equation*}
+    \left\{
+      \begin{array}{lr}
+          -b_0y_0 + c_0y_1 & = d_0,\\
+        a_iy_{i-1} - b_iy_i + c_iy_{i+1} & = d_i, i = 1,...,n-1, \\
+        a_ny_{n-1}-b_ny_n & = d_n.
+      \end{array}
+    \right.
+  \end{equation*}
+  \textit{Коэффициенты при первом порядке аппроксимации:}
+  \begin{equation*}
+    b_0 = -F_1h + D_1,~~c_0 = D_1,~~d_0=E_1h,
+  \end{equation*}
+  \begin{equation*}
+    a_i = 1 - A(x_i)\frac{h}{2},~~b_i=2-B(x_i)h^2,~~c_i=1+A(x_i)\frac{h}{2},~~d_i=C(x_i)h^2,~i=1,...,n-1,
+  \end{equation*}
+  \begin{equation*}
+    a_n=-D_2,~~b_n=-F_2h-D_2,~~d_n=E_2h.
+  \end{equation*}
+  \textit{Коэффициенты при втором порядке аппроксимации:}
+  \begin{equation*}
+    b_0 = -F_1h + D_1 + D_1(A(a)-B(a)h)\frac{h}{2},~~c_0 = A(a)D_1\frac{h}{2} + D_1,~~d_0=E_1h+C(a)D_1\frac{h^2}{2},
+  \end{equation*}
+  \begin{equation*}
+    a_i = 1 - A(x_i)\frac{h}{2},~~b_i=2-B(x_i)h^2,~~c_i=1+A(x_i)\frac{h}{2},~~d_i=C(x_i)h^2,~i=1,...,n-1,
+  \end{equation*}
+  \begin{equation*}
+    a_n=A(b)D_2\frac{h}{2}-D_2,~~b_n=-F_2h-D_2+D_2(A(b)+B(b)h)\frac{h}{2},~~d_n=E_2h-C(b)D_2\frac{h^2}{2}.
+  \end{equation*}
 \end{flushleft}
 
 
 \section{\normalsize{Текст программы с комментариями}}
 Кроме расположенных ниже листингов, исходный код можно посмотреть по адресу: \url{https://github.com/andiogenes/differential-equations/tree/master/finite-difference-method}
+\linebreak\linebreak\textbf{Main.hs}
+\inputminted[breaklines]{haskell}{../app/Main.hs}
+
+\textbf{FiniteDifferenceMethod.hs}
+\inputminted[breaklines]{haskell}{../src/FiniteDifferenceMethod.hs}
+
+\textbf{Parameters.hs}
+\inputminted[breaklines]{haskell}{../src/Parameters.hs}
+\pagebreak
 
 \section{\normalsize{Тестовые примеры}}
+\begin{flushleft}
+  \begin{itemize}
+    \item При сетке из $n$ частей, $n=25$:\linebreak
+      \includegraphics[scale=0.6]{solition_25.png}\linebreak
+      \includegraphics[scale=0.6]{norm_25.png}\linebreak
+    \item $n=50$:\linebreak
+      \includegraphics[scale=0.6]{solition_50.png}\linebreak
+      \includegraphics[scale=0.6]{norm_50.png}\linebreak
+    \item $n=100$:\linebreak
+      \includegraphics[scale=0.6]{solution_100.png}\linebreak
+      \includegraphics[scale=0.6]{norm_100.png}\linebreak
+    \item $n=200$:\linebreak
+      \includegraphics[scale=0.6]{solution_200.png}\linebreak
+      \includegraphics[scale=0.6]{norm_200.png}\linebreak
+    \item $n=500$:\linebreak
+      \includegraphics[scale=0.6]{solution_500.png}\linebreak
+      \includegraphics[scale=0.6]{norm_500.png}\linebreak
+  \end{itemize}
+\end{flushleft}
+\begin{flushleft}
+  По полученным результатам видно, что с увеличением $n$ оба решения стремятся к точному $u$. При этом приближенное решение второго порядка аппроксимации сходится к $u$ на порядок быстрее, чем решение первого порядка.
+\end{flushleft}
 
 \end{document}
