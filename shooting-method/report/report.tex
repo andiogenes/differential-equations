@@ -122,4 +122,16 @@
   \input{plot.pdf_tex}
 \end{figure}
 
+Здесь $U'(0) \approx -3.258,~~U(1) \approx -1.244338$.\newline\linebreak
+На графике видно, что температура пластины в точке уменьшается от основания к вершине, причем $T = 0$ в точках, для которых $R \approx 0.38 \approx 2/5$.
+\linebreak\linebreak
+\textit{Примечание}\linebreak
+Для проверки~задача Коши \eqref{eq:sys}, \eqref{eq:cond}, $U'(0) = -3.258$, была также решена на сервисе WolframAlpha методом Рунге-Кутты 4-го поядка точности: \href{https://www.wolframalpha.com/input/?i=Runge-Kutta+method%2C+d%5E2u%2Fdr%5E2+%3D+0.4*u%5E4%2F%28%281-r%29*tg6%2B0.05%29-%281%2F%28r%2B0.5%29-tg6%2F%28%281-r%29*tg6%2B0.05%29%29du%2Fdr%2C+u%280%29+%3D+1%2C+u%27%280%29+%3D+-3.258+from+0+to+1%2C+h+%3D+.001}{\textbf{ссылка}}.
+\linebreak\linebreak
+Решение $U_W$ оказалось близким к ранее полученному, близость $U_W'$ к $U'$ можно доказать, заметив, что:
+  \begin{enumerate}
+    \item если $\mathopen|U-U_W\mathclose| \le \xi$, то $\mathopen|U'-U'_W\mathclose| \le \psi$,
+    \item $U'(0) = U_W'(0) \approx -3.258$,
+    \item В $U(1), U_W(1)$ касательная к $U, U_W$ проходит горизонтально, т.е. $U'(1)=U_W'(1)=0.$
+  \end{enumerate} 
 \end{document}
