@@ -147,7 +147,80 @@
   \end{itemize}
 \end{flushleft}
 \begin{flushleft}
-  По полученным результатам видно, что с увеличением $n$ оба решения стремятся к точному $u$. При этом приближенное решение второго порядка аппроксимации сходится к $u$ на порядок быстрее, чем решение первого порядка.
+  По полученным результатам видно, что с увеличением $n$ оба решения стремятся к точному $u$.\linebreak\linebreak 
+  При этом:
+  \begin{itemize}
+    \item Приближенное решение второго порядка аппроксимации сходится к $u$ на порядок быстрее, чем решение первого порядка;
+    \item \(\mathopen| u_{approx}(x_1) - u(x_1) \mathclose| \le \mathopen| u_{approx}(x_2) - u(x_2) \mathclose|,~~x_1 \le x_2\);
+    \item \(\displaystyle\max_x{\mathopen| u_{approx}(x) - u(x) \mathclose|} = \mathopen| u_{approx}(x_0) - u(x_0) \mathclose| \).
+  \end{itemize}
+
+  Последние два наблюдения объясняются накоплением погрешностей на прямом и обратном ходах метода прогонки.
+\end{flushleft}
+
+\section{\normalsize{Устойчивость прогонки}}
+\begin{flushleft}
+  \textit{Коэффициенты при первом порядке аппроксимации:}
+  \begin{equation}\label{eq:koef11}
+    b_0 = -h + 1,~~c_0 = 1,
+  \end{equation}
+  \begin{equation}\label{eq:koef12}
+    a_i = 1 - \frac{4x_i}{2x_i+1}\frac{h}{2},~~b_i=2+\frac{4}{2x_i+1}h^2,~~c_i=1+\frac{4x_i}{2x_i+1}\frac{h}{2},~i=1,...,n-1,
+  \end{equation}
+  \begin{equation}\label{eq:koef13}
+    a_n=-1,~~b_n=-2h-1.
+  \end{equation}
+  \textit{Коэффициенты при втором порядке аппроксимации:}
+  \begin{equation}\label{eq:koef21}
+    b_0 = -h + 1 + (\frac{4a}{2a+1}+\frac{4}{2a+1}h)\frac{h}{2},~~c_0 = \frac{4a}{2a+1}\frac{h}{2} + 1,
+  \end{equation}
+  \begin{equation}\label{eq:koef22}
+    a_i = 1 - \frac{4x_i}{2x_i+1}\frac{h}{2},~~b_i=2+\frac{4}{2x_i+1}h^2,~~c_i=1+\frac{4x_i}{2x_i+1}\frac{h}{2},~i=1,...,n-1,
+  \end{equation}
+  \begin{equation}\label{eq:koef23}
+    a_n=\frac{4b}{2b+1}\frac{h}{2}-1,~~b_n=-2h-1+(\frac{4b}{2b+1}-\frac{4}{2b+1}h)\frac{h}{2}.
+  \end{equation}
+  \textit{Условие диагонального преобладания}
+  \begin{equation}\label{eq:diagsup}
+    \mathopen| a_i \mathclose| > 0, \mathopen| c_i \mathclose| > 0, i = 2,...,m-1,
+  \end{equation}
+  \begin{equation*}
+    \mathopen| b_i \mathclose| \ge \mathopen| a_i \mathclose| + \mathopen| c_i \mathclose|, i = 1, ...,m.
+  \end{equation*}
+\end{flushleft}
+\begin{flushleft}
+  Из \eqref{eq:koef11}, \eqref{eq:diagsup} диагональное преобладание нарушается, но при измельчении шага $b_o$ приближается слева к $c_0$.\linebreak\linebreak
+  В \eqref{eq:koef12} $a_i, b_i, c_i$ неотрицательны на $[0,1]$, поэтому: \begin{enumerate}\item Выполняется первая часть \eqref{eq:diagsup}, \item В \eqref{eq:diagsup} можно опустить модули.\end{enumerate}
+  \begin{equation*}
+    2 + \frac{4}{2x_i+1}h^2 \ge 1 - \frac{4x_i}{2x_i+1}\frac{h}{2} + 1 + \frac{4x_i}{2x_i+1}\frac{h}{2},
+  \end{equation*}
+  \begin{equation*}
+    \frac{4}{2x_i+1}h^2 \ge 0.
+  \end{equation*}
+  Очевидно, что это неравенство выполняется при любом $x_i \in [0,1],~h > 0$.\linebreak\linebreak
+  Если в \eqref{eq:koef13} возьмём модули, получим:
+  \begin{equation}\label{eq:k1c}
+    2h+1 \ge 1 \implies 2h \ge 0.
+  \end{equation}
+  Таким образом, метод прогонки для трехдиагональной матрицы с коэффициентами \eqref{eq:koef11}, \eqref{eq:koef12}, \eqref{eq:koef13} строго говоря не является устойчивым из-за коэффициентов при $i=0$. \linebreak\linebreak
+  Если в \eqref{eq:koef21} подставим $a=0$, получим выражения, аналогичные \eqref{eq:koef11}.\linebreak\linebreak\eqref{eq:koef12} и \eqref{eq:koef22} одинаковы.\linebreak\linebreak
+
+  Подставив в \eqref{eq:koef23} $b=1$ получим:
+  \begin{equation*}
+    a_n = \frac{2h}{3} - 1, b_n = -\frac{4h}{3} - \frac{2h^2}{3} - 1,
+  \end{equation*}
+  \begin{equation*}
+    \mathopen| a_n \mathclose| = 1 - \frac{2h}{3}, \mathopen| b_n \mathclose| = \frac{3 + 4h + 2h^2}{3}.
+  \end{equation*}
+  Далее в \eqref{eq:diagsup}:
+  \begin{equation}\label{eq:k2c}
+    \frac{3+4h+2h^2}{3} \ge \frac{3 - 2h}{3} \implies 2h^2 + 2h \ge 0.
+  \end{equation}
+  Очевидно, что это неравенство выполняется при $h > 0$. Заметим, что в сравнении с \eqref{eq:k1c}, \eqref{eq:k2c} имеет добавку $2h^2$.\linebreak\linebreak
+  Для матрицы с коэффициентами \eqref{eq:koef21}, \eqref{eq:koef22}, \eqref{eq:koef23} метод прогонки не является устойчивым по той же причине, что и в предыдущем случае.\linebreak\linebreak
+  Заметим также, если критерий устойчивости выражать как $\mathopen| \alpha_i \mathclose| \le 1, \forall i \in 0, ..., n$, он тоже не будет выполнен, так как $\alpha_1 = c_0/b_0 = 1/(1-h) > 1$.\linebreak
+
+  
 \end{flushleft}
 
 \end{document}
